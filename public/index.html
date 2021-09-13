@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Document</title>
+
+</head>
+
+<body>
+
+    <select name="" id="state" onchange="selectState()">
+        <option value="">Select State</option>
+    </select>
+
+
+    <div class="main-class">
+        <div class="card">
+            <div>
+                <div class="center-ele">
+                    <h3>Total Vaccination Doses</h3>
+                    <p id="total" style="color: rgb(243, 55, 55);"></p>
+                </div>
+
+                <div class="side">
+                    <div class="left">
+                        <h4>Dose 1</h4>
+                        <p id="partial"></p>
+                    </div>
+
+                    <div class="right">
+                        <h4>Dose 2</h4>
+                        <p id="both"></p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <br>
+
+        <div class="card">
+            <div>
+                <div class="center-ele">
+                    <h3>Sites Conducting Vaccination</h3>
+                    <p id="siteTotal" style="color: rgb(243, 55, 55);"></p>
+                </div>
+
+                <div class="side">
+                    <div class="left">
+                        <h4>Government</h4>
+                        <p id="govt"></p>
+                    </div>
+
+                    <div class="right">
+                        <h4>Private</h4>
+                        <p id="pvt"></p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <br>
+
+        <div class="card">
+            <div>
+                <div class="center-ele">
+                    <h3>Total Registrations</h3>
+                    <p id="regTotal" style="color: rgb(243, 55, 55);"></p>
+                </div>
+
+                <div class="side">
+                    <div class="left">
+                        <h4>Age 18-44</h4>
+                        <p id="adult"></p>
+                    </div>
+
+                    <div class="right">
+                        <h4>Age 45+</h4>
+                        <p id="senior"></p>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+        <br>
+    </div>
+
+
+    <script>
+        let total = document.getElementById('total');
+        let partial = document.getElementById('partial');
+        let both = document.getElementById('both');
+
+        let siteTotal = document.getElementById('siteTotal');
+        let govt = document.getElementById('govt');
+        let pvt = document.getElementById('pvt');
+
+        let regTotal = document.getElementById('regTotal');
+        let adult = document.getElementById('adult');
+        let senior = document.getElementById('senior');
+
+        let url1 = 'http://localhost:8080/getVaccinationData';
+        let url2 = 'http://localhost:8080/getSitesData';
+        let url3 = 'http://localhost:8080/getRegistrationData';
+        let url4 = 'http://localhost:8080/getStates';
+
+        // const getData = async () => {
+        //     fetch(url)
+        //         .then(response => response.json())
+        //         .then(result => {console.log(result);
+        //             total.innerHTML=result.total;
+        //             partial.innerHTML=result.partial_vaccinated;
+        //             both.innerHTML=result.totally_vaccinated;
+        //         })
+        //}
+
+        const getData = async (url) => {
+            return new Promise((resolve, reject) => {
+                fetch(url)
+                    .then(response => response.json())
+                    .then(result => {
+                        resolve(result);
+                    });
+            })
+
+        }
+
+        const vaccination = async () => {
+
+            const result = await getData(url1);
+            total.innerHTML = result.total;
+            partial.innerHTML = result.partial_vaccinated;
+            both.innerHTML = result.totally_vaccinated;
+        }
+
+        vaccination();
+
+
+        const sites = async () => {
+
+            const result = await getData(url2);
+            siteTotal.innerHTML = result.total;
+            govt.innerHTML = result.govt;
+            pvt.innerHTML = result.pvt;
+        }
+
+        sites();
+
+        const registration = async () => {
+
+            const result = await getData(url3);
+            regTotal.innerHTML = result.total;
+            adult.innerHTML = result.cit_18_45;
+            senior.innerHTML = result.cit_45_above;
+        }
+
+        registration();
+
+        const states = async () => {
+
+            const result = await getData(url4);
+            console.log(result);
+            let state = document.getElementById("state");
+
+
+            result.forEach(element => {
+                let el = document.createElement("option");
+                el.textContent = element.state_name;
+                el.value = element.state_id;
+                state.appendChild(el);
+            });
+        }
+
+        states();
+
+        let url = 'http://localhost:8080/getVaccinationDataByStates/';
+
+        const vaccinationByState = async (id) => {
+
+            const result = await getData(url + id);
+            total.innerHTML = result[0].total;
+            partial.innerHTML = result[0].partial_vaccinated;
+            both.innerHTML = result[0].totally_vaccinated;
+        }
+
+        
+
+        function selectState() {
+            let x = document.getElementById("state").value;
+            vaccinationByState(x);
+        }
+
+
+        // getData();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,36 @@
+body {
+    background-color: #eceff5;
+}
+.main-class {
+    display: flex;
+} 
+
+.card {
+    border: 1px solid grey;
+    background-color: aliceblue;
+    border-radius: 2px;
+    margin: 10px;
+    padding: 10px;
+    /* height: 210px; */
+    width: 33%;
+    /* overflow: scroll; */
+}
+
+/* .center-ele {
+    text-align: left;
+} */
+
+.right {
+   font-size: small;
+   font-family: Verdana, Geneva, Tahoma, sans-serif;
+   
+   
+}
+
+.left {   
+    font-size: small;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+ }
+
+
+ 
